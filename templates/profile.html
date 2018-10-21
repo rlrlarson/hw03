@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<header class="masthead d-flex">
+      <div class="container text-center my-auto">
+       
+	<h4><a href="{{ url_for('index') }}">Home</a></h4>
+	<h1>{{user.username}}'s Posts </h1>
+
+
+  <div class="container text-center my-auto">
+     <br>
+        <div class="col-lg-8 mx-auto" class="page-title">
+             
+              <div style="padding-top:30;
+              padding-bottom:30;
+              background-color:#ffffff55;
+              -moz-border-radius: 5px;
+              -webkit-border-radius: 5px;">
+              
+               <!-- Author's posts --> 
+
+<!--               {% for p in posts %}
+                <p> Author number{{ p.author }}: {{ p.content }}</p>
+              {% endfor %} -->
+
+              <!--To display username-->
+              {% for p in posts %}
+                <p> {{ p[1] }}: {{ p[0].content }}</p>
+              {% endfor %}
+
+              </div>
+              <br>
+
+          </div>
+
+    
+    <!-- Follow/Unfollow buttons --> 
+
+          {% if followed is defined %}
+            {% if followed %}
+              <form action="/unfollow/{{user.username}}" method="POST">
+                <button type="submit" class="btn btn-info btn-lg" style="background-color: #DDAA00; border-color: #DDAA00"> Unfollow </button>
+              </form>
+            {% else %}
+              <form action="/follow/{{user.username}}" method="POST">
+                <button type="submit" class="btn btn-info btn-lg"> Follow </button>
+              </form>
+            {% endif %}
+          {% else %}
+            <text class="text-muted"> This is your profile! </text>
+          {% endif %}
+
+ </div>
+</header>
+
+
+{% endblock %}
