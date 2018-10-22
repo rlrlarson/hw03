@@ -17,6 +17,3 @@ class NewpostForm(FlaskForm):
 	content = TextAreaField('Content', validators=[DataRequired()])
 	submit = SubmitField('Post')
 
-# class SearchForm(FlaskForm):
-# 	username = StringField('Username', validators=[DataRequired()])
-# 	submit = SubmitField('Post')

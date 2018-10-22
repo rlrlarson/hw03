@@ -3,15 +3,19 @@ from flask import Flask, flash, render_template, request, url_for, redirect, jso
 from models import db, User, Post, Follows
 from forms import SignupForm, LoginForm, NewpostForm #, SearchForm
 from passlib.hash import sha256_crypt
-# from flask_migrate import Migrate
+from flask_heroku import Heroku
 
+#to deploy on heroku
+#app = Flask(__name__)
+#heroku = Heroku(app)
+
+# to use locally
 app = Flask(__name__)
-app.secret_key = "cscie14a-hw3"
-
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:rebeccalarson@localhost:5432/hw3_db' 
 
 db.init_app(app)
-#migrate = Migrate(app, db)
+app.secret_key = "cscie14a-hw3"
+
 
 def add_username(followed_posts):
 	edited_posts = []
@@ -29,13 +33,20 @@ def index():
 
 		users_followed = Follows.query.filter_by(follower=session_user.uid).all()
 		uids_followed = [f.following for f in users_followed] + [session_user.uid]
-		followed_posts = Post.query.filter(Post.author.in_(uids_followed)).all() 
+		followed_posts = Post.query.filter(Post.author.in_(uids_followed)).all()
+
+		# added to display posts in time order
+		followed_posts.reverse()
 
 		followed_posts_with_username = add_username(followed_posts)
 
 		return render_template('index.html', title='Home', posts=followed_posts_with_username, session_username=session_user.username)
 	else:
 		all_posts = Post.query.all()
+
+		# added to display posts in time order
+		all_posts.reverse()
+
 		all_posts_with_username = add_username(all_posts)
 		return render_template('index.html', title='Home', posts=all_posts_with_username)
 
@@ -101,13 +112,17 @@ def profile(username):
 
 	if profile_user:
 		profile_user_posts = Post.query.filter_by(author=profile_user.uid).all()
+
+		# added to display posts in time order
+		profile_user_posts.reverse()
+
 		profile_user_posts_with_username = add_username(profile_user_posts)
 
 		if "username" in session:
 			session_user = User.query.filter_by(username=session['username']).first()
 
 			if profile_user == session_user:
-				return render_template('profile.html', user=profile_user, posts=profile_user_posts_with_username)
+				return render_template('profile.html', user=profile_user, posts=profile_user_posts_with_username, session_username=session_user.username)
 
 			if Follows.query.filter_by(follower=session_user.uid, following=profile_user.uid).first():
 				followed = True
@@ -115,6 +130,9 @@ def profile(username):
 				followed = False
 
 			return render_template('profile.html', user=profile_user, posts=profile_user_posts_with_username, followed=followed)
+
+		else:
+			return render_template('profile.html', user=profile_user, posts=profile_user_posts_with_username)
 
 	else:
 		flash('That user does not exist.')
@@ -140,7 +158,6 @@ def follow(username):
  	# if user_to_follow == session_user:
 	 # 	flash('You cannot follow yourself!')
   #    	return redirect(url_for('profile', username=username))
-
 
 	db.session.add(new_follow)
 	db.session.commit()

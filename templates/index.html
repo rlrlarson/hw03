@@ -23,19 +23,22 @@
               padding-bottom:30;
               background-color:#ffffff55;
               -moz-border-radius: 5px;
-              -webkit-border-radius: 5px;">
+              -webkit-border-radius: 5px;
+              height: 250px;
+              overflow-y: auto">
               
               <!-- Show Authors Posts -->
-<!--               {% for p in posts %}
-                <p> Author number{{ p.author }}: {{ p.content }}</p>
-              {% endfor %} -->
 
               <!--To display username-->
               {% for p in posts %}
-                <p> {{ p[1] }}: {{ p[0].content }}</p>
+                {% if session_username == p[1] %}
+                  <p style="margin-bottom: 10px; margin-left: 100px;"> <span style="background-color: #88A5B0; border-radius: 5px; padding: 10px; color: white; line-height: 250%">{{ p[0].content }}</span> <span class="font-weight-bold" style="color: #95949C">  {{ p[1] }}</span></p>
+                {% else %}
+                  <p style="margin-bottom: 10px; margin-right: 100px"> <span class="font-weight-bold" style="color: #95949C">{{ p[1] }} </span> <span style="background-color: #D4D3DF; border-radius: 5px; padding: 10px; line-height: 250%">{{ p[0].content }}</span></p>
+                {% endif %}
               {% endfor %}
 
-             </div> 
+             </div>
              <br>   
        
      <div class="input-group-prepend">     
