@@ -31,15 +31,11 @@
 					{% endfor %} 
 				</div>
 
-<!-- ADD REPEAT PASSWORD CHECK -->
-<!-- 				<div class="form-group">
+				<!-- adding repeat password check -->
+				<div class="form-group">
 					{{ form.password.label }}<br>
-					{{ form.password(size=32) }}<br>
-
-					{% for error in form.password.errors %}
-						<span style="color: red;">[{{ error }}]</span>
-					{% endfor %} 
-				</div> -->
+ 					<input type="password" name="repeat_password" style="width: 240px"></input>
+				</div>
 
 				{{ form.submit(class="btn btn-info btn-lg") }}
 

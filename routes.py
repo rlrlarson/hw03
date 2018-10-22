@@ -92,7 +92,14 @@ def signup():
 	if request.method == 'POST':
 		username = request.form['username']
 		password = request.form['password']
+		repeat_password = request.form['repeat_password']
+
 		existing_user = User.query.filter_by(username=username).first()
+
+		if password != repeat_password:
+			flash('Passwords do not match.')
+			return redirect(url_for('signup'))
+
 		if existing_user:
 			flash('The username already exists. Please pick another one.')
 			return redirect(url_for('signup'))
